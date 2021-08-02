@@ -20,9 +20,8 @@ for symbol in Symbol['Symbol']:
       data = Company(symbol,start,end)
       data_close = data_close.append(data.get_One_Close())
     except:
-      # Quality -= 1
       continue
   data_close.to_csv('Ban\*'.replace("*",symbol+".csv"),index=False)
   print(symbol)
-
-
+# a = Company.CreateCompany("AAA","05/03/2018","05/12/2018","Q")
+# print(a.getBalan())
