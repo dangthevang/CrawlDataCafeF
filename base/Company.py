@@ -7,7 +7,7 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 
 class Company():
-    Infor = pd.read_csv("base\CafeF_HOSE.csv")
+    Infor = pd.read_csv("base/CafeF_HOSE.csv")
 
     def __init__(self, Symbol, start, end, Link_Balan = "", Link_InCome = ""):
         self.Symbol = Symbol
