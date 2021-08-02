@@ -2,7 +2,6 @@
 from multiprocessing.context import Process
 from base.Company import Company
 import pandas as pd
-import multiprocessing as mp
 
 
 def CoverTime(Quality,start = True):
@@ -26,11 +25,13 @@ def xuli(symbol):
       continue
   data_close.to_csv('Ban\*'.replace("*",symbol+".csv"),index=False)
   print(symbol)
-
+#   Symbol = pd.read_csv("base/CafeF_HOSE.csv")
+# for symbol in Symbol['Symbol']:
 if __name__ == '__main__':
-  Symbol = pd.read_csv("base/CafeF_HOSE.csv")
+  # pd.read_csv("base/CafeF_HOSE.csv")
+  Symbol = ["AAA"]
   process = []
-  for symbol in Symbol['Symbol']:
+  for symbol in Symbol:
     proc = Process(target=xuli,args=(symbol,))
     process.append(proc)
     proc.start()
