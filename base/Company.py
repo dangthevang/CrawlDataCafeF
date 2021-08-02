@@ -17,8 +17,11 @@ class Company():
         self.Link_InCome_Financal = ""
 
     def get_One_Close(self):
-      data = self.get_All_Close()
-      return data.loc[len(data["close"])]
+        try:
+            data = self.get_All_Close()
+            return data.loc[len(data["close"])]
+        except:
+            return {"date":-1.0,"close":-1.0}
     
     def get_All_Close(self,id_batch = 1):
         form_data = {'ctl00$ContentPlaceHolder1$scriptmanager': 'ctl00$ContentPlaceHolder1$ctl03$panelAjax|ctl00$ContentPlaceHolder1$ctl03$pager2',

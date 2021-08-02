@@ -4,8 +4,8 @@ import pandas as pd
 pd.options.mode.chained_assignment = None
 
 data = pd.read_excel("DATA_TEST_20h_27_5.xlsx")
-data["PRICE"] = 0.0
-data["BAN"] = 0.0
+data["PRICE"] = -1.0
+data["BAN"] = -1.0
 
 Companys = list(set(data["COMPANY"]))
 
