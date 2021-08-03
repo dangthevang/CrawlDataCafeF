@@ -35,7 +35,7 @@ class Company():
             data = self.get_All_Close()
             return data.loc[len(data["close"])+1]
         except:
-            return {"date":-1.0,"close":-1.0}
+            return pd.DataFrame({"date":[],"close":[]})
     
     def get_All_Close(self,id_batch = 1):
         form_data = {'ctl00$ContentPlaceHolder1$scriptmanager': 'ctl00$ContentPlaceHolder1$ctl03$panelAjax|ctl00$ContentPlaceHolder1$ctl03$pager2',
