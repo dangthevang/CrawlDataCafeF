@@ -78,7 +78,7 @@ class Company():
         try:
             return self.get_Volume().mean()
         except:
-            return math.nan
+            return None
 
     def getFinancal(self,link):
         r = requests.get(link,
