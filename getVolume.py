@@ -12,7 +12,7 @@ def CoverTime(Quality,start = True):
 
 def xuli(symbol):
   data_volume = pd.DataFrame({"date":[],"Volume":[]})
-  Quality = 54
+  Quality = 55
   data = Company(symbol)
   while Quality != 0:
     try:

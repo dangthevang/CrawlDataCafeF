@@ -4,7 +4,7 @@ from bs4 import BeautifulSoup
 import pandas as pd
 import urllib3
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
-
+import math
 
 
 class Company():
@@ -78,7 +78,7 @@ class Company():
         try:
             return self.get_Volume().mean()
         except:
-            return pd.DataFrame({"date":[],"Volume":[]})
+            return math.nan
 
     def getFinancal(self,link):
         r = requests.get(link,
