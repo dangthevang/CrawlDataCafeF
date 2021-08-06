@@ -1,4 +1,4 @@
-Symbol,,Name_Company
+Symbol,Link,Name_Company
 AAA,http://s.cafef.vn/hose/AAA-cong-ty-co-phan-nhua-an-phat-xanh.chn,cong-ty-co-phan-nhua-an-phat-xanh.chn
 AAM,http://s.cafef.vn/hose/AAM-cong-ty-co-phan-thuy-san-mekong.chn,cong-ty-co-phan-thuy-san-mekong.chn
 AAT,http://s.cafef.vn/hose/AAT-cong-ty-co-phan-tien-son-thanh-hoa.chn,cong-ty-co-phan-tien-son-thanh-hoa.chn
@@ -297,7 +297,6 @@ SVC,http://s.cafef.vn/hose/SVC-cong-ty-co-phan-dich-vu-tong-hop-sai-gon.chn,cong
 SVD,http://s.cafef.vn/hose/SVD-cong-ty-co-phan-dau-tu-va-thuong-mai-vu-dang.chn,cong-ty-co-phan-dau-tu-va-thuong-mai-vu-dang.chn
 SVI,http://s.cafef.vn/hose/SVI-cong-ty-co-phan-bao-bi-bien-hoa.chn,cong-ty-co-phan-bao-bi-bien-hoa.chn
 SVT,http://s.cafef.vn/hose/SVT-cong-ty-co-phan-cong-nghe-sai-gon-vien-dong.chn,cong-ty-co-phan-cong-nghe-sai-gon-vien-dong.chn
-Symbol,Link,Name_Company
 SZC,http://s.cafef.vn/hose/SZC-cong-ty-co-phan-sonadezi-chau-duc.chn,cong-ty-co-phan-sonadezi-chau-duc.chn
 SZL,http://s.cafef.vn/hose/SZL-cong-ty-co-phan-sonadezi-long-thanh.chn,cong-ty-co-phan-sonadezi-long-thanh.chn
 TAC,http://s.cafef.vn/hose/TAC-cong-ty-co-phan-dau-thuc-vat-tuong-an.chn,cong-ty-co-phan-dau-thuc-vat-tuong-an.chn

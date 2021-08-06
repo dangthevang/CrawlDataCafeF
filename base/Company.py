@@ -1,3 +1,4 @@
+from typing import Text
 import requests
 from bs4 import BeautifulSoup
 import pandas as pd
@@ -54,7 +55,31 @@ class Company():
                                      'volume_match', 'value_match', 'volume_reconcile', 'value_reconcile',
                                      'open', 'high', 'low']
         return stock_slice_batch[["date","close"]]
-    
+    def get_Volume(self,id_batch = 1):
+        form_data = {'ctl00$ContentPlaceHolder1$scriptmanager': 'ctl00$ContentPlaceHolder1$ctl03$panelAjax|ctl00$ContentPlaceHolder1$ctl03$pager2',
+                     'ctl00$ContentPlaceHolder1$ctl03$txtKeyword': self.Symbol,
+                     'ctl00$ContentPlaceHolder1$ctl03$dpkTradeDate1$txtDatePicker': self.start,
+                     'ctl00$ContentPlaceHolder1$ctl03$dpkTradeDate2$txtDatePicker': self.end,
+                     '__EVENTTARGET': 'ctl00$ContentPlaceHolder1$ctl03$pager2',
+                     '__EVENTARGUMENT': id_batch,
+                     '__ASYNCPOST': 'true'}
+        r = requests.post(self.Link_Close, data=form_data,
+                          headers=self.Headers, verify=True)
+        soup = BeautifulSoup(r.content, 'html.parser')
+        table = soup.find('table')
+        stock_slice_batch = pd.read_html(str(table))[0].iloc[2:,:12]
+        stock_slice_batch.columns = ['date', 'adjust', 'close', 'change_perc', 'avg',
+                                     'volume_match', 'value_match', 'volume_reconcile', 'value_reconcile',
+                                     'open', 'high', 'low']
+        return stock_slice_batch["volume_match"].astype(int)
+
+    def get_Arg_Volume(self):
+        
+        try:
+            return self.get_Volume().mean()
+        except:
+            return pd.DataFrame({"date":[],"Volume":[]})
+
     def getFinancal(self,link):
         r = requests.get(link,
                           headers=self.Headers)
@@ -69,5 +94,12 @@ class Company():
     
     def getIncom(self):
         return self.getFinancal(self.Link_InCome)
+
+    def getVolume10day(self,Link):
+        r = requests.get(Link,headers=self.Headers)
+        soup = BeautifulSoup(r.content, 'html.parser')
+        class_of_volume = soup.find_all('div',{'class': 'r'})
+        print(class_of_volume[8])
+        return class_of_volume[8].get_text().replace(" ","").replace(",","")
 
     
