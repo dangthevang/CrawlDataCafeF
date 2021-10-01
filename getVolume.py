@@ -26,7 +26,7 @@ def xuli(symbol):
   print(symbol)
 
 xuli("AAA")
-# #   Symbol = pd.read_csv("base/CafeF_HOSE.csv")
+#   Symbol = pd.read_csv("base/CafeF_HOSE.csv")
 # # for symbol in Symbol['Symbol']:
 # if __name__ == '__main__':
 #   # pd.read_csv("base/CafeF_HOSE.csv")
