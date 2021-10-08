@@ -1,11 +1,16 @@
-from typing import Text
 import requests
 from bs4 import BeautifulSoup
 import pandas as pd
 import urllib3
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 import re
-
+def getData(data,field):
+    try:
+        t = data[data[0]==field].index
+        x = data[4][t].values[0]
+    except:
+        x = 0
+    return x
 
 class Company():
     def __init__(self, Symbol, start="", end="", Link_Balan = "", Link_InCome = ""):
@@ -13,7 +18,7 @@ class Company():
         self.start = start
         self.end = end
         self.Headers = {'Accept': '*/*', 'Connection': 'keepalive', 'UserAgent': 'Mozilla/5.0 (Windows NT 6.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/66.0.3359.158 Safari/537.36',
-                  'AcceptEncoding': 'gzip, deflate, br', 'AcceptLanguage': 'enUS;q=0.5,en;q=0.3', 'CacheControl': 'maxage=0', 'UpgradeInsecureRequests': '1', 'Referer': 'https://google.com'}
+                  'AcceptEncoding': 'gzip, deflate, br', 'AcceptLanguage': 'enUS;q=0.5,en;q=0.3', 'CacheControl': 'maxage=0', 'UpgradeInsecureRequests': '1', 'Referer': 'https://cafef.vn/'}
         self.Link_Close = "https://s.cafef.vn/LichsugiaodichAAA1.chn".replace("AAA", Symbol)
         self.Link_Balan = Link_Balan
         self.Link_InCome = Link_InCome
@@ -78,24 +83,31 @@ class Company():
             return self.get_Volume().mean()
         except:
             return None
-
-
     #Báo cáo tài chính
     def getFinancal(self,link):
-        r = requests.get(link,
-                          headers=self.Headers)
-        
+        r = requests.get(link)
         soup = BeautifulSoup(r.content, 'html.parser')
         table = soup.find('table',{'id': 'tableContent'})
         financial = pd.read_html(str(table),displayed_only =False)
-        return financial
+        return financial[0]
     
     def getBalan(self):
-        return self.getFinancal(self.Link_Balan)
+        return self.getFinancal(self.Link_Balan[0])
     
     def getIncom(self):
         return self.getFinancal(self.Link_InCome)
-    
+
+    def getField(self, dataField):
+        page_BSheet = self.getBalan()
+        page_IncSta = self.getIncom()
+        data = page_BSheet.append(page_IncSta,ignore_index= True)
+        arr = [i.replace(',','').replace(" ",'').replace("\n",'').replace("\r","").replace("\xa0","") for i in data[0]]
+        data[0] = arr
+        dict_result = {}
+        for k,v in dataField.items():
+            dict_result[k] = getData(data,v)
+        return dict_result
+
     # Số lượng cổ phiếu phát hành
 
     def getVolumeStart(self, link):
