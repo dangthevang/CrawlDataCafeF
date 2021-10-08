@@ -16,7 +16,7 @@ def xuli(symbol):
   data = Company(symbol)
   while Quality != 0:
     try:
-      Quality -= 1
+      Quality = 1
       data.start = CoverTime(Quality)
       data.end = CoverTime(Quality,False)
       data_volume = data_volume.append({"date":data.end,"Volume":data.get_Arg_Volume()},ignore_index=True)

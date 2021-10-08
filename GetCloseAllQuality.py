@@ -17,7 +17,7 @@ def xuli(symbol):
   data = Company(symbol)
   while Quality != 0:
     try:
-      Quality -= 1
+      Quality = 1
       data.start = CoverTime(Quality)
       data.end = CoverTime(Quality,False)
       data_close = data_close.append(data.get_One_Close())

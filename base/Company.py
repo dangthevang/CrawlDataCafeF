@@ -4,40 +4,34 @@ from bs4 import BeautifulSoup
 import pandas as pd
 import urllib3
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
-import math
+import re
 
 
 class Company():
-    # Infor = pd.read_csv("base/CafeF_HOSE.csv")
     def __init__(self, Symbol, start="", end="", Link_Balan = "", Link_InCome = ""):
         self.Symbol = Symbol
         self.start = start
         self.end = end
-        self.Headers = {'Accept': '*/*', 'Connection': 'keep-alive', 'User-Agent': 'Mozilla/5.0 (Windows NT 6.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/66.0.3359.158 Safari/537.36',
-                  'Accept-Encoding': 'gzip, deflate, br', 'Accept-Language': 'en-US;q=0.5,en;q=0.3', 'Cache-Control': 'max-age=0', 'Upgrade-Insecure-Requests': '1', 'Referer': 'https://google.com'}
-        self.Link_Close = "https://s.cafef.vn/Lich-su-giao-dich-AAA-1.chn".replace("AAA", Symbol)
+        self.Headers = {'Accept': '*/*', 'Connection': 'keepalive', 'UserAgent': 'Mozilla/5.0 (Windows NT 6.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/66.0.3359.158 Safari/537.36',
+                  'AcceptEncoding': 'gzip, deflate, br', 'AcceptLanguage': 'enUS;q=0.5,en;q=0.3', 'CacheControl': 'maxage=0', 'UpgradeInsecureRequests': '1', 'Referer': 'https://google.com'}
+        self.Link_Close = "https://s.cafef.vn/LichsugiaodichAAA1.chn".replace("AAA", Symbol)
         self.Link_Balan = Link_Balan
         self.Link_InCome = Link_InCome
-    
-    @classmethod
-    def CreateCompany(cls,Symbol, start, end, option ="Quy"):
+    # thiết lập thời gian
+    def set_Time(self,start,end):
+        self.start = start
+        self.end = end
+    # thiết lập đường link
+    def set_Link(self, start, end, option ="Quy"):
         arr_time = start.split("/")
-        name = Company.Infor[Company.Infor["Symbol"] == Symbol]["Name_Company"].values[0]
+        name = Company.Infor[Company.Infor["Symbol"] == self.Symbol]["Name_Company"].values[0]
         if option == "Quy":
-            LinkInCome = "https://s.cafef.vn/bao-cao-tai-chinh/"+Symbol+"/IncSta/"+arr_time[2]+"/"+str(int(arr_time[1])//3+1)+"/0/0/bao-cao-tai-chinh-"+name
-            LinkBalan = "https://s.cafef.vn/bao-cao-tai-chinh/"+Symbol+"/BSheet/"+arr_time[2]+"/"+str(int(arr_time[1])//3+1)+"/0/0/ket-qua-hoat-dong-kinh-doanh-"+name
+            self.Link_Balan = "https://s.cafef.vn/baocaotaichinh/"+self.Symbol+"/IncSta/"+arr_time[2]+"/"+str(int(arr_time[1])//3+1)+"/0/0/baocaotaichinh"+name
+            self.Link_InCome = "https://s.cafef.vn/baocaotaichinh/"+self.Symbol+"/BSheet/"+arr_time[2]+"/"+str(int(arr_time[1])//3+1)+"/0/0/ketquahoatdongkinhdoanh"+name
         else:
-            LinkInCome = "https://s.cafef.vn/bao-cao-tai-chinh/"+Symbol+"/IncSta/"+arr_time[2]+"/0/0/0/bao-cao-tai-chinh-"+name
-            LinkBalan = "https://s.cafef.vn/bao-cao-tai-chinh/"+Symbol+"/BSheet/"+arr_time[2]+"/0/0/0/ket-qua-hoat-dong-kinh-doanh-"+name
-        return cls(Symbol, start, end,LinkBalan,LinkInCome)
-
-    def get_One_Close(self):
-        try:
-            data = self.get_All_Close()
-            return data.loc[len(data["close"])+1]
-        except:
-            return pd.DataFrame({"date":[],"close":[]})
-    
+            self.Link_InCome = "https://s.cafef.vn/baocaotaichinh/"+self.Symbol+"/IncSta/"+arr_time[2]+"/0/0/0/baocaotaichinh"+name
+            self.Link_Balan = "https://s.cafef.vn/baocaotaichinh/"+self.Symbol+"/BSheet/"+arr_time[2]+"/0/0/0/ketquahoatdongkinhdoanh"+name
+    #Giá đóng cửa
     def get_All_Close(self,id_batch = 1):
         form_data = {'ctl00$ContentPlaceHolder1$scriptmanager': 'ctl00$ContentPlaceHolder1$ctl03$panelAjax|ctl00$ContentPlaceHolder1$ctl03$pager2',
                      'ctl00$ContentPlaceHolder1$ctl03$txtKeyword': self.Symbol,
@@ -55,7 +49,14 @@ class Company():
                                      'volume_match', 'value_match', 'volume_reconcile', 'value_reconcile',
                                      'open', 'high', 'low']
         return stock_slice_batch[["date","close"]]
-    def get_Volume(self,id_batch = 1):
+    def get_One_Close(self):
+        try:
+            data = self.get_All_Close()
+            return data.loc[len(data["close"])+1]
+        except:
+            return pd.DataFrame({"date":[],"close":[]})
+    
+    def get_Value_match(self,id_batch = 1):
         form_data = {'ctl00$ContentPlaceHolder1$scriptmanager': 'ctl00$ContentPlaceHolder1$ctl03$panelAjax|ctl00$ContentPlaceHolder1$ctl03$pager2',
                      'ctl00$ContentPlaceHolder1$ctl03$txtKeyword': self.Symbol,
                      'ctl00$ContentPlaceHolder1$ctl03$dpkTradeDate1$txtDatePicker': self.start,
@@ -71,15 +72,15 @@ class Company():
         stock_slice_batch.columns = ['date', 'adjust', 'close', 'change_perc', 'avg',
                                      'volume_match', 'value_match', 'volume_reconcile', 'value_reconcile',
                                      'open', 'high', 'low']
-        return stock_slice_batch["value_match"].astype(int)
-
-    def get_Arg_Volume(self):
-        
+        return stock_slice_batch["value_match"].astype(float) 
+    def get_Arg_Value_Match(self):
         try:
             return self.get_Volume().mean()
         except:
             return None
 
+
+    #Báo cáo tài chính
     def getFinancal(self,link):
         r = requests.get(link,
                           headers=self.Headers)
@@ -94,12 +95,38 @@ class Company():
     
     def getIncom(self):
         return self.getFinancal(self.Link_InCome)
-
-    def getVolume10day(self,Link):
-        r = requests.get(Link,headers=self.Headers)
-        soup = BeautifulSoup(r.content, 'html.parser')
-        class_of_volume = soup.find_all('div',{'class': 'r'})
-        print(class_of_volume[8])
-        return class_of_volume[8].get_text().replace(" ","").replace(",","")
-
     
+    # Số lượng cổ phiếu phát hành
+
+    def getVolumeStart(self, link):
+        r = requests.get(link)
+        soup = BeautifulSoup(r.content, 'html.parser')
+        a_string = soup.find(string= re.compile("Khối lượng cổ phiếu niêm yết lần đầu:"))
+        return a_string.parent.b.text.replace(" ",'').replace("\n","").replace(",",'')
+
+    # def getTimeLineVolume(self):
+    #     link = "https://s.cafef.vn/Ajax/Events_RelatedNews_New.aspx?symbol=AAA&floorID=0&configID=4&PageIndex=1&PageSize=200&Type=1"
+    #     r = requests.get(link)
+    #     soup = BeautifulSoup(r.content, 'html.parser')
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
