@@ -5,11 +5,13 @@ import urllib3
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 import re
 def getData(data,field):
-    try:
-        t = data[data[0]==field].index
-        x = data[4][t].values[0]
-    except:
-        x = 0
+    for i in field:
+        try:
+            t = data[data[0]==i].index
+            x = data[4][t].values[0]
+            break
+        except:
+            x = 0
     return x
 
 class Company():
