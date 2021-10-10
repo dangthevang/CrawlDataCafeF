@@ -103,7 +103,7 @@ class Company():
                                      'volume_match', 'value_match', 'volume_reconcile', 'value_reconcile',
                                      'open', 'high', 'low']
         return stock_slice_batch["volume_match"].astype(float) 
-    def get_Arg_Value_Match(self):
+    def get_Arg_Volume(self):
         try:
             return self.get_Volume().mean()
         except:
