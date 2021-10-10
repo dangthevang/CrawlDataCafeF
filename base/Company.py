@@ -70,7 +70,7 @@ class Company():
                      'ctl00$ContentPlaceHolder1$ctl03$dpkTradeDate2$txtDatePicker': self.end,
                      '__EVENTTARGET': 'ctl00$ContentPlaceHolder1$ctl03$pager2',
                      '__EVENTARGUMENT': id_batch,
-                     '__ASYNCPOST': 'true'}
+                     '__ASYNCPOST': True}
         r = requests.post(self.Link_Close, data=form_data,
                           headers=self.Headers, verify=True)
         soup = BeautifulSoup(r.content, 'html.parser')
@@ -93,7 +93,7 @@ class Company():
                      'ctl00$ContentPlaceHolder1$ctl03$dpkTradeDate2$txtDatePicker': self.end,
                      '__EVENTTARGET': 'ctl00$ContentPlaceHolder1$ctl03$pager2',
                      '__EVENTARGUMENT': id_batch,
-                     '__ASYNCPOST': 'true'}
+                     '__ASYNCPOST': True}
         r = requests.post(self.Link_Close, data=form_data,
                           headers=self.Headers, verify=True)
         soup = BeautifulSoup(r.content, 'html.parser')
