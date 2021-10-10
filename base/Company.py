@@ -82,6 +82,29 @@ class Company():
         return stock_slice_batch["value_match"].astype(float) 
     def get_Arg_Value_Match(self):
         try:
+            return self.get_Value_match().mean()
+        except:
+            return None
+
+    def get_Volume(self,id_batch = 1):
+        form_data = {'ctl00$ContentPlaceHolder1$scriptmanager': 'ctl00$ContentPlaceHolder1$ctl03$panelAjax|ctl00$ContentPlaceHolder1$ctl03$pager2',
+                     'ctl00$ContentPlaceHolder1$ctl03$txtKeyword': self.Symbol,
+                     'ctl00$ContentPlaceHolder1$ctl03$dpkTradeDate1$txtDatePicker': self.start,
+                     'ctl00$ContentPlaceHolder1$ctl03$dpkTradeDate2$txtDatePicker': self.end,
+                     '__EVENTTARGET': 'ctl00$ContentPlaceHolder1$ctl03$pager2',
+                     '__EVENTARGUMENT': id_batch,
+                     '__ASYNCPOST': 'true'}
+        r = requests.post(self.Link_Close, data=form_data,
+                          headers=self.Headers, verify=True)
+        soup = BeautifulSoup(r.content, 'html.parser')
+        table = soup.find('table')
+        stock_slice_batch = pd.read_html(str(table))[0].iloc[2:,:12]
+        stock_slice_batch.columns = ['date', 'adjust', 'close', 'change_perc', 'avg',
+                                     'volume_match', 'value_match', 'volume_reconcile', 'value_reconcile',
+                                     'open', 'high', 'low']
+        return stock_slice_batch["volume_match"].astype(float) 
+    def get_Arg_Value_Match(self):
+        try:
             return self.get_Volume().mean()
         except:
             return None

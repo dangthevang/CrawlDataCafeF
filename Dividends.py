@@ -13,6 +13,7 @@ def CoverTime(arr, start=True):
 
 
 def getSale(time,symbol,value):
+  print(symbol)
   dividend = pd.read_csv("DividendVietName_Volume/DividendVietNam/{}.csv".format(symbol))
   start = CoverTime(time)
   end = CoverTime(time,False)
@@ -29,9 +30,13 @@ def getSale(time,symbol,value):
       else:
         cp += 1/eval(tyle.replace(":","/"))
   return value*cp+sum
-data = pd.read_csv("QUY_30K.csv")
-for i in range(len(data["COMPANY"])):
-  if data["BAN"][i] != -1:
-    data["BAN"][i] = getSale(data["YEAR"][i],data["COMPANY"][i],data["BAN"][i])
 
-data.to_csv("QUY_30K(edited).csv")
+
+data = pd.read_csv("SemiFinal.csv")
+arr = []
+for i in range(len(data["COMPANY"])):
+    arr.append(getSale(data["Time"][i],data["COMPANY"][i],data["Ban"][i]))
+
+data["Ban"] = arr
+
+data.to_csv("testFinal.csv")
