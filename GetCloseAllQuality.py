@@ -13,12 +13,12 @@ def CoverTime(Quality,start = True):
 
 def xuli(symbol):
   data_close = pd.DataFrame({"date":[],"close":[]})
-  Quality = 55
+  Quality = 54
   data = Company(symbol,CoverTime(Quality),CoverTime(Quality,False))
   # data.start = CoverTime(Quality)
   # data.end = CoverTime(Quality,False)
   # time.sleep(1)
-  print(data.get_Arg_Value_Match())
+  print(data.get_Value_match())
   # v = 5
   # while data_close.empty and v >0:
   #   v-=1
@@ -37,4 +37,4 @@ def xuli(symbol):
 #     proc.start()
 #   for p in process:
 #     p.join()
-xuli("AAA")
+xuli("CVT")
