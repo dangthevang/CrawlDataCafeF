@@ -19,8 +19,7 @@ class Company():
         self.Symbol = Symbol
         self.start = start
         self.end = end
-        self.Headers = {'Accept': '*/*', 'Connection': 'keepalive', 'UserAgent': 'Mozilla/5.0 (Windows NT 6.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/66.0.3359.158 Safari/537.36',
-                  'AcceptEncoding': 'gzip, deflate, br', 'AcceptLanguage': 'enUS;q=0.5,en;q=0.3', 'CacheControl': 'maxage=0', 'UpgradeInsecureRequests': '1', 'Referer': 'https://cafef.vn/'}
+        self.Headers = {'content-type': 'application/x-www-form-urlencoded', 'User-Agent': 'Mozilla'}
         self.Link_Close = "https://s.cafef.vn/Lich-su-giao-dich-AAA-1.chn".replace("AAA", Symbol)
         self.Link_Balan = Link_Balan
         self.Link_InCome = Link_InCome
@@ -52,7 +51,7 @@ class Company():
         print(r.content)
         soup = BeautifulSoup(r.content, 'html.parser')
         table = soup.find_all('table')
-        stock_slice_batch = pd.read_html(str(table))[1].iloc[:,:]
+        stock_slice_batch = pd.read_html(str(table))[1].iloc[2:,:12]
         stock_slice_batch.columns = ['date', 'adjust', 'close', 'change_perc', 'avg',
                                      'volume_match', 'value_match', 'volume_reconcile', 'value_reconcile',
                                      'open', 'high', 'low']
@@ -65,19 +64,18 @@ class Company():
         #     return pd.DataFrame({"date":[],"close":[]})
     
     def get_Value_match(self,id_batch = 1):
-        form_data = {'ctl00$ContentPlaceHolder1$scriptmanager': 'ctl00$ContentPlaceHolder1$scriptmanager|ctl00$ContentPlaceHolder1$ctl03$btSearch',
+        form_data = {'ctl00$ContentPlaceHolder1$scriptmanager': 'ctl00$ContentPlaceHolder1$ctl03$panelAjax|ctl00$ContentPlaceHolder1$ctl03$pager2',
                      'ctl00$ContentPlaceHolder1$ctl03$txtKeyword': self.Symbol,
                      'ctl00$ContentPlaceHolder1$ctl03$dpkTradeDate1$txtDatePicker': self.start,
                      'ctl00$ContentPlaceHolder1$ctl03$dpkTradeDate2$txtDatePicker': self.end,
-                     '__VIEWSTATEGENERATOR': '2E2252AF',
-                     '__EV`ENTARGUMENT': id_batch,
+                     '__EVENTTARGET': 'ctl00$ContentPlaceHolder1$ctl03$pager2',
+                     '__EVENTARGUMENT': id_batch,
                      '__ASYNCPOST': 'true'}
         r = requests.post(self.Link_Close, data=form_data,
-                          headers=self.Headers, verify=True)
+                          headers=self.Headers, verify=False)
         soup = BeautifulSoup(r.content, 'html.parser')
-        table = soup.find_all('table')
-        print(table)
-        stock_slice_batch = pd.read_html(str(table))[1].iloc[:,:]
+        table = soup.find('table')
+        stock_slice_batch = pd.read_html(str(table))[0].iloc[2:,:12]
         stock_slice_batch.columns = ['date', 'adjust', 'close', 'change_perc', 'avg',
                                      'volume_match', 'value_match', 'volume_reconcile', 'value_reconcile',
                                      'open', 'high', 'low']
@@ -95,12 +93,13 @@ class Company():
                      'ctl00$ContentPlaceHolder1$ctl03$dpkTradeDate2$txtDatePicker': self.end,
                      '__EVENTTARGET': 'ctl00$ContentPlaceHolder1$ctl03$pager2',
                      '__EVENTARGUMENT': id_batch,
-                     '__ASYNCPOST': True}
+                     '__ASYNCPOST': 'true'}
         r = requests.post(self.Link_Close, data=form_data,
-                          headers=self.Headers, verify=True)
+                          headers=self.Headers, verify=False)
+
         soup = BeautifulSoup(r.content, 'html.parser')
         table = soup.find('table')
-        stock_slice_batch = pd.read_html(str(table))[1].iloc[:,:]
+        stock_slice_batch = pd.read_html(str(table))[1].iloc[2:,:12]
         stock_slice_batch.columns = ['date', 'adjust', 'close', 'change_perc', 'avg',
                                      'volume_match', 'value_match', 'volume_reconcile', 'value_reconcile',
                                      'open', 'high', 'low']
