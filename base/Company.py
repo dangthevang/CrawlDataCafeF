@@ -65,17 +65,18 @@ class Company():
         #     return pd.DataFrame({"date":[],"close":[]})
     
     def get_Value_match(self,id_batch = 1):
-        form_data = {'ctl00$ContentPlaceHolder1$scriptmanager': 'ctl00$ContentPlaceHolder1$ctl03$panelAjax|ctl00$ContentPlaceHolder1$ctl03$pager2',
+        form_data = {'ctl00$ContentPlaceHolder1$scriptmanager': 'ctl00$ContentPlaceHolder1$scriptmanager|ctl00$ContentPlaceHolder1$ctl03$btSearch',
                      'ctl00$ContentPlaceHolder1$ctl03$txtKeyword': self.Symbol,
                      'ctl00$ContentPlaceHolder1$ctl03$dpkTradeDate1$txtDatePicker': self.start,
                      'ctl00$ContentPlaceHolder1$ctl03$dpkTradeDate2$txtDatePicker': self.end,
-                     '__EVENTTARGET': 'ctl00$ContentPlaceHolder1$ctl03$pager2',
-                     '__EVENTARGUMENT': id_batch,
-                     '__ASYNCPOST': True}
+                     '__VIEWSTATEGENERATOR': '2E2252AF',
+                     '__EV`ENTARGUMENT': id_batch,
+                     '__ASYNCPOST': 'true'}
         r = requests.post(self.Link_Close, data=form_data,
                           headers=self.Headers, verify=True)
         soup = BeautifulSoup(r.content, 'html.parser')
-        table = soup.find('table')
+        table = soup.find_all('table')
+        print(table)
         stock_slice_batch = pd.read_html(str(table))[1].iloc[:,:]
         stock_slice_batch.columns = ['date', 'adjust', 'close', 'change_perc', 'avg',
                                      'volume_match', 'value_match', 'volume_reconcile', 'value_reconcile',
