@@ -13,8 +13,7 @@ def CoverTime(arr, start=True):
 
 
 def getSale(time,symbol,value):
-  print(symbol)
-  dividend = pd.read_csv("DividendVietName_Volume/DividendVietNam/{}.csv".format(symbol))
+  dividend = pd.read_csv("Dividend(11-02-2021)\Dividend(11-02-2021)\{}.csv".format(symbol))
   start = CoverTime(time)
   end = CoverTime(time,False)
   sum = 0
@@ -28,15 +27,16 @@ def getSale(time,symbol,value):
       if dividend['tien'][i] == True:
         sum = sum + cp*10*float(tyle)/100
       else:
-        cp += 1/eval(tyle.replace(":","/"))
+        cp += cp*1/eval(tyle.replace(":","/"))
+  print(symbol,value,value*cp+sum)
   return value*cp+sum
 
 
-data = pd.read_csv("SemiFinal.csv")
+data = pd.read_csv("ChuaChinhSua.csv")
 arr = []
 for i in range(len(data["COMPANY"])):
-    arr.append(getSale(data["Time"][i],data["COMPANY"][i],data["Ban"][i]))
+    if data["YEAR"][i] == "2021/2/0/0":
+      data["BAN"][i] = getSale(data["YEAR"][i],data["COMPANY"][i],data["BAN"][i])
 
-data["Ban"] = arr
 
 data.to_csv("testFinal.csv")

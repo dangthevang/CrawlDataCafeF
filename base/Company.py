@@ -21,7 +21,7 @@ class Company():
         self.end = end
         self.Headers = {'Accept': '*/*', 'Connection': 'keepalive', 'UserAgent': 'Mozilla/5.0 (Windows NT 6.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/66.0.3359.158 Safari/537.36',
                   'AcceptEncoding': 'gzip, deflate, br', 'AcceptLanguage': 'enUS;q=0.5,en;q=0.3', 'CacheControl': 'maxage=0', 'UpgradeInsecureRequests': '1', 'Referer': 'https://cafef.vn/'}
-        self.Link_Close = "https://s.cafef.vn/LichsugiaodichAAA1.chn".replace("AAA", Symbol)
+        self.Link_Close = "https://s.cafef.vn/Lich-su-giao-dich-AAA-1.chn".replace("AAA", Symbol)
         self.Link_Balan = Link_Balan
         self.Link_InCome = Link_InCome
     # thiết lập thời gian
@@ -40,28 +40,29 @@ class Company():
             self.Link_Balan = "https://s.cafef.vn/baocaotaichinh/"+self.Symbol+"/BSheet/"+arr_time[2]+"/0/0/0/ketquahoatdongkinhdoanh"+name
     #Giá đóng cửa
     def get_All_Close(self,id_batch = 1):
-        form_data = {'ctl00$ContentPlaceHolder1$scriptmanager': 'ctl00$ContentPlaceHolder1$ctl03$panelAjax|ctl00$ContentPlaceHolder1$ctl03$pager2',
+        form_data = {'ctl00$ContentPlaceHolder1$scriptmanager': 'ctl00$ContentPlaceHolder1$scriptmanager|ctl00$ContentPlaceHolder1$ctl03$btSearch',
                      'ctl00$ContentPlaceHolder1$ctl03$txtKeyword': self.Symbol,
                      'ctl00$ContentPlaceHolder1$ctl03$dpkTradeDate1$txtDatePicker': self.start,
                      'ctl00$ContentPlaceHolder1$ctl03$dpkTradeDate2$txtDatePicker': self.end,
-                     '__EVENTTARGET': 'ctl00$ContentPlaceHolder1$ctl03$pager2',
-                     '__EVENTARGUMENT': id_batch,
+                     '__VIEWSTATEGENERATOR': '2E2252AF',
+                     '__EV`ENTARGUMENT': id_batch,
                      '__ASYNCPOST': 'true'}
         r = requests.post(self.Link_Close, data=form_data,
                           headers=self.Headers, verify=True)
+        print(r.content)
         soup = BeautifulSoup(r.content, 'html.parser')
-        table = soup.find('table')
+        table = soup.find_all('table')
         stock_slice_batch = pd.read_html(str(table))[0].iloc[2:,:12]
         stock_slice_batch.columns = ['date', 'adjust', 'close', 'change_perc', 'avg',
                                      'volume_match', 'value_match', 'volume_reconcile', 'value_reconcile',
                                      'open', 'high', 'low']
         return stock_slice_batch[["date","close"]]
     def get_One_Close(self):
-        try:
+        # try:
             data = self.get_All_Close()
-            return data.loc[len(data["close"])+1]
-        except:
-            return pd.DataFrame({"date":[],"close":[]})
+            return data
+        # except:
+        #     return pd.DataFrame({"date":[],"close":[]})
     
     def get_Value_match(self,id_batch = 1):
         form_data = {'ctl00$ContentPlaceHolder1$scriptmanager': 'ctl00$ContentPlaceHolder1$ctl03$panelAjax|ctl00$ContentPlaceHolder1$ctl03$pager2',
