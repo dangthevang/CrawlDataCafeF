@@ -76,7 +76,7 @@ class Company():
                           headers=self.Headers, verify=True)
         soup = BeautifulSoup(r.content, 'html.parser')
         table = soup.find('table')
-        stock_slice_batch = pd.read_html(str(table))[1].iloc[2:,:12]
+        stock_slice_batch = pd.read_html(str(table))[0].iloc[2:,:12]
         stock_slice_batch.columns = ['date', 'adjust', 'close', 'change_perc', 'avg',
                                      'volume_match', 'value_match', 'volume_reconcile', 'value_reconcile',
                                      'open', 'high', 'low']
